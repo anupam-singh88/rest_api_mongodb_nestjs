@@ -38,7 +38,7 @@ export class UserService {
         }
       : users;
   }
-  async findOne(id: string, updateUserDto: UpdateUserDTO) {
+  async findOne(id: string) {
     const user = await this.userModel.findById(id);
 
     if (!user) throw new NotFoundException('User Not Found!!');

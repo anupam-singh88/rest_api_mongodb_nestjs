@@ -26,7 +26,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Body() updateUserDto: UpdateUserDTO) {
-    return this.userService.findOne(id, updateUserDto);
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
