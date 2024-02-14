@@ -4,16 +4,30 @@ import {
   NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDTO } from './dto';
+import { AccountLoginDTO, CreateUserDto, UpdateUserDTO } from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { USER_MODEL, UserDocument } from 'src/MongooseModel/user/user.schema';
 import { Model } from 'mongoose';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(USER_MODEL) private readonly userModel: Model<UserDocument>,
   ) {}
+
+  async login(accountLoginDto: AccountLoginDTO) {
+    const { email, password } = accountLoginDto;
+    const user = await this.userModel.findOne({ email });
+    if (!user) throw new NotFoundException('User Not Found!!');
+    console.log(password, user.password);
+    const isPwMatched = await compare(password, user.password);
+    if (!isPwMatched) throw new BadRequestException('Invalid Credentials!!');
+    return user;
+    // const { email, password } = accountLoginDto;
+    // const user = await this.userModel.findByEmailAndPassword(email, password);
+    // return user;
+  }
 
   async create(createUserDto: CreateUserDto) {
     try {

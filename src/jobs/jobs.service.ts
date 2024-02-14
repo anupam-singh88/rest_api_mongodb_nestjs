@@ -38,6 +38,7 @@ export class JobsService {
 
   async findOne(id: string) {
     const job = await this.jobModel.findById(id);
+    // const job = await this.jobModel.findById(id).populate('employer');
 
     if (!job) {
       throw new NotFoundException('Job not found');

@@ -45,3 +45,20 @@ export type JobDocument = Job & Document;
 export const JOB_MODEL = Job.name; // Job
 
 export const JobSchema = SchemaFactory.createForClass(Job);
+
+const populateMiddleWare = function (next) {
+  this.populate({
+    path: 'employer',
+    // model: USER_MODEL,
+    select: {
+      _id: 1,
+      email: 1,
+      name: 1,
+      accountType: 1,
+    },
+  });
+  next();
+};
+
+JobSchema.pre('findOne', populateMiddleWare);
+JobSchema.pre('find', populateMiddleWare);
